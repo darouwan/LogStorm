@@ -17,16 +17,18 @@ public class LoadAllLogDao {
     public List<RawSyslogBean> getAllRawSyslog(){
         List<RawSyslogBean> list = new ArrayList<RawSyslogBean>();
         Connection conn = DatabaseConnection.getConnection();
-        String sql="SELECT  DEVICEID,SOURCE,CONTENT,LOG_DATETIME FROM log_raw_syslog";
+        String sql = "SELECT  DEVICEID,FACILITY,SERVRITY,CONTENT,TS,SERVRITY_DESC FROM log_raw_syslog";
         try {
             statement=conn.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 RawSyslogBean rawSyslogBean = new RawSyslogBean();
                 rawSyslogBean.setDeviceID(resultSet.getString(1));
-                rawSyslogBean.setSource(resultSet.getString(2));
-                rawSyslogBean.setContent(resultSet.getString(3));
-                rawSyslogBean.setLogDatetime(resultSet.getDate(4));
+                rawSyslogBean.setFacility(resultSet.getString(2));
+                rawSyslogBean.setServrity(resultSet.getString(3));
+                rawSyslogBean.setContent(resultSet.getString(4));
+                rawSyslogBean.setTs(resultSet.getDate(5));
+                rawSyslogBean.setServrityDesc(resultSet.getString(6));
                 list.add(rawSyslogBean);
             }
         } catch (SQLException e) {

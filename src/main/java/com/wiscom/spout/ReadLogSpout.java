@@ -23,26 +23,27 @@ public class ReadLogSpout extends BaseRichSpout {
     private SpoutOutputCollector collector;
     private static String sql="SELECT * FROM log_raw_syslog";
 
-    LoadAllLogDao loadAllLogDao = new LoadAllLogDao();
-    private List<RawSyslogBean> list=loadAllLogDao.getAllRawSyslog();
+    LoadAllLogDao loadAllLogDao;
+    private List<RawSyslogBean> list;
     private int count=0;
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("DEVICEID","SOURCE","ENTITY"));
+        outputFieldsDeclarer.declare(new Fields("deviceid", "servrity", "entity"));
     }
 
     @Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         collector = spoutOutputCollector;
-
+        loadAllLogDao = new LoadAllLogDao();
+        list = loadAllLogDao.getAllRawSyslog();
     }
 
     @Override
     public void nextTuple() {
         if(count<list.size()){
             RawSyslogBean bean = list.get(count);
-            collector.emit(new Values(bean.getDeviceID(),bean.getSource(),bean.getContent()));
+            collector.emit(new Values(bean.getDeviceID(), bean.getServrityDesc(), bean));
         }
         count++;
     }

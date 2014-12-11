@@ -18,7 +18,7 @@ public class LogAnalyzeTopology {
     public static void main(String[] args){
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("read",new ReadLogSpout());
-        builder.setBolt("split",new SplitBolt(),2).fieldsGrouping("read",new Fields("DEVICEID"));
+        builder.setBolt("split", new SplitBolt(), 2).fieldsGrouping("read", new Fields("deviceid"));
         Map conf =new HashMap();
         conf.put(Config.TOPOLOGY_DEBUG, true);
 
