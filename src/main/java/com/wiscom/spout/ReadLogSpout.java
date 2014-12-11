@@ -1,13 +1,10 @@
 package com.wiscom.spout;
 
 import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import com.wiscom.bean.RawSyslogBean;
 import com.wiscom.db.LoadAllLogDao;
@@ -21,7 +18,6 @@ import java.util.Map;
 public class ReadLogSpout extends BaseRichSpout {
 
     private SpoutOutputCollector collector;
-    private static String sql="SELECT * FROM log_raw_syslog";
 
     LoadAllLogDao loadAllLogDao;
     private List<RawSyslogBean> list;

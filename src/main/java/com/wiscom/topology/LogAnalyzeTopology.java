@@ -18,14 +18,14 @@ public class LogAnalyzeTopology {
     public static void main(String[] args){
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("read",new ReadLogSpout());
-        builder.setBolt("split", new SplitBolt(), 2).fieldsGrouping("read", new Fields("deviceid"));
+        builder.setBolt("split", new SplitBolt(), 2).fieldsGrouping("read", new Fields("deviceid", "servrity"));
         Map conf =new HashMap();
         conf.put(Config.TOPOLOGY_DEBUG, true);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("analyzeLog",conf,builder.createTopology());
 
-        Utils.sleep(10000);
+        Utils.sleep(5000);
         cluster.shutdown();
     }
 }
