@@ -20,7 +20,7 @@ public class LogAnalyzeTopology {
         builder.setSpout("read",new ReadLogSpout());
         builder.setBolt("split", new SplitBolt(), 2).fieldsGrouping("read", new Fields("deviceid", "servrity"));
         Map conf =new HashMap();
-        conf.put(Config.TOPOLOGY_DEBUG, true);
+        conf.put(Config.TOPOLOGY_DEBUG, false);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("analyzeLog",conf,builder.createTopology());

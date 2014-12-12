@@ -39,7 +39,7 @@ public class ReadLogSpout extends BaseRichSpout {
     public void nextTuple() {
         if(count<list.size()){
             RawSyslogBean bean = list.get(count);
-            collector.emit(new Values(bean.getDeviceID(), bean.getServrityDesc(), bean));
+            collector.emit(new Values(bean.getDeviceID(), bean.getServrityDesc(), bean.getContent()));
         }
         count++;
     }
