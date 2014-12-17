@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Created by cjf on 2014/12/10.
  */
 public class SplitBolt extends BaseBasicBolt {
-    String pattern = "^([a-zA-Z0-9-]+)\\\\s(.+)恢复正常";
+    String pattern = "主墙";
 
     /**
      * Process the input tuple and optionally emit new tuples based on the input tuple.
@@ -28,6 +28,7 @@ public class SplitBolt extends BaseBasicBolt {
         Pattern r = Pattern.compile(pattern);
         //String content = ((RawSyslogBean)input.getValue(2)).getContent();
         String content = input.getString(2);
+        System.out.println("====================");
         System.out.println(content);
         Matcher m = r.matcher(content);
         if (m.find()) {
