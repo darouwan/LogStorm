@@ -27,6 +27,7 @@ public class TestMessageScheme implements Scheme {
 
     @Override
     public Fields getOutputFields() {
+
         return new Fields("msg");
     }
 }
