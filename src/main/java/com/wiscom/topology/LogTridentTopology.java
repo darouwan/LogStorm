@@ -1,15 +1,20 @@
 package com.wiscom.topology;
 
+import backtype.storm.Config;
+import backtype.storm.LocalCluster;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
-import storm.trident.TridentState;
+
 import storm.trident.TridentTopology;
 import storm.trident.operation.CombinerAggregator;
-import storm.trident.operation.builtin.Count;
+import storm.trident.operation.Filter;
+import storm.trident.operation.TridentOperationContext;
 import storm.trident.testing.FixedBatchSpout;
-import storm.trident.testing.MemoryMapState;
 import storm.trident.testing.Split;
 import storm.trident.tuple.TridentTuple;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by cjf on 2014/12/22.
@@ -24,12 +29,14 @@ public class LogTridentTopology {
 
         spout.setCycle(true);
         TridentTopology topology = new TridentTopology();
-        TridentState wordCounts =
+
                 topology.newStream("spout1", spout)
                         .each(new Fields("sentence"), new Split(), new Fields("word")).groupBy(new Fields("word")).
-                        aggregate(new One(), new Fields("one")).
-                        persistentAggregate(new MemoryMapState.Factory(), new Count(), new Fields("count"));
-
+                        aggregate(new One(), new Fields("one")).each(new Fields("one"), new PrintFilter());
+        LocalCluster localCluster = new LocalCluster();
+        Map conf = new HashMap();
+        conf.put(Config.TOPOLOGY_DEBUG, false);
+        localCluster.submitTopology("test", conf, topology.build());
         // topology.newDRPCStream("reach").stateQuery(wordCounts,new Fields("word"),new MapGet(),new Fields("count")).aggregate(new One(), new Fields("one"));
     }
 
@@ -65,6 +72,24 @@ public class LogTridentTopology {
         @Override
         public Integer zero() {
             return 1;
+        }
+    }
+
+    private static class PrintFilter implements Filter {
+        @Override
+        public boolean isKeep(TridentTuple tuple) {
+            System.out.println(tuple.getInteger(0));
+            return true;
+        }
+
+        @Override
+        public void prepare(Map conf, TridentOperationContext context) {
+
+        }
+
+        @Override
+        public void cleanup() {
+
         }
     }
 }
